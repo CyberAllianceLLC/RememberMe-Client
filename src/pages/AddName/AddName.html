@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Add Name</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only clear>
+        <ion-icon name="camera"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <img id="avatar" height="120" [src]="image" (click)="imageViewPage()"/>
+  <form [formGroup]="profile" (ngSubmit)="addName()">
+    <ion-item>
+      <ion-label floating>Name</ion-label>
+      <ion-input type="text" formControlName="name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Description</ion-label>
+      <ion-textarea autoresize type="text" rows="1" formControlName="description"></ion-textarea>
+    </ion-item>
+    <div padding>
+      <button ion-button full round type="submit" [disabled]="!profile.valid">Add Name</button>
+    </div>
+  </form>
+</ion-content>

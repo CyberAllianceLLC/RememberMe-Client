@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{profile.name}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <img id="avatar" height="175" [src]="profile.src" (click)="imageViewPage()"/>
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col>
+        <ion-item text-wrap>
+          {{profile.description}}
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-navbar>
+    <button showWhen="ios" ion-button clear (click)="editNames(!edit)">
+      Edit
+    </button>
+    <ion-title>Names</ion-title>
+    <ion-buttons end>
+      <button showWhen="android,windows" ion-button clear (click)="editNames(!edit)">
+        Edit
+      </button>
+      <button showWhen="ios" ion-button clear (click)="addNamesPage()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-fab showWhen="android, windows" bottom right>
+    <button ion-fab color="danger" (click)="addNamesPage()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+  <ion-list>
+    <ion-item-group [reorder]="edit" (ionItemReorder)="reorderNames($event)">
+      <button ion-item *ngFor="let profile of profiles" detail-push (click)="nameViewPage(profile)">
+        <ion-avatar item-left>
+          <img [src]="profile.src">
+        </ion-avatar>
+        <h2>{{profile.name}}</h2>
+        <p>{{profile.description}}</p>
+      </button>
+    </ion-item-group>
+  </ion-list>
+</ion-content>
