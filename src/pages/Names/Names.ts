@@ -1,45 +1,34 @@
 import {Component} from '@angular/core';
-import {NavController, reorderArray} from 'ionic-angular';
+import {NavController} from "ionic-angular";
 import _ from 'lodash';
-
-import {AddNamePage} from "../AddName/AddName";
-import {AppStorage} from "../../providers/AppStorage";
-import {NameViewPage} from "../NameView/NameView";
+import {AddNamePage} from "../add-name/add-name";
+import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
 
 @Component({
   selector: 'page-names',
-  templateUrl: 'Names.html'
+  templateUrl: 'names.html',
 })
 export class NamesPage {
 
-  profiles = [];
-  edit = false;
+  names: any[];
 
-  constructor(public nav: NavController, private storage: AppStorage) {}
-
-  ionViewWillEnter() {
-    this.storage.get('names').then((result: any) => {
-      if(Array.isArray(result) && !_.isEqual(this.profiles.sort(), result.sort())) {
-        this.profiles = result;
-      }
+  constructor(private navCtrl: NavController,
+              private localStorage: LocalStorageDirective) {
+    this.localStorage.get('Names').then((result: any) => {
+      this.names = (_.isArray(result) ? result : []);
     });
   }
 
-  addNamesPage() {
-    this.nav.push(AddNamePage);
+  getFirstLetter(value) {
+    return _.toLower(_.head(value));
   }
 
-  nameViewPage(profile) {
-    this.nav.push(NameViewPage, {profile: profile})
+  addName() {
+    this.navCtrl.push(AddNamePage);
   }
 
-  editNames(bool) {
-    this.edit = bool;
-  }
-
-  reorderNames(indexes) {
-    this.profiles = reorderArray(this.profiles, indexes);
-    this.storage.set('names', this.profiles);
+  nameProfile(name) {
+    console.log(name.first);
   }
 
 }

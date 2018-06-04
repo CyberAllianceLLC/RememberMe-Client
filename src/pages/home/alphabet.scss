@@ -1,0 +1,119 @@
+@function set-text-color($color) {
+  @if (lightness($color) > 50) {
+    @return #000000; // Lighter backgorund, return dark color
+  } @else {
+    @return #ffffff; // Darker background, return light color
+  }
+}
+
+.alphabet-content {
+  font-size: 80px;
+  text-align: center;
+  font-weight: 100;
+  border-radius: 15px;
+}
+
+.a {
+  background-color: map-get($alphabet, a);
+  color: set-text-color(map-get($alphabet, a));
+}
+.b {
+  background-color: map-get($alphabet, b);
+  color: set-text-color(map-get($alphabet, b));
+}
+.c {
+  background-color: map-get($alphabet, c);
+  color: set-text-color(map-get($alphabet, c));
+}
+.d {
+  background-color: map-get($alphabet, d);
+  color: set-text-color(map-get($alphabet, d));
+}
+.e {
+  background-color: map-get($alphabet, e);
+  color: set-text-color(map-get($alphabet, e));
+}
+.f {
+  background-color: map-get($alphabet, f);
+  color: set-text-color(map-get($alphabet, f));
+}
+.g {
+  background-color: map-get($alphabet, g);
+  color: set-text-color(map-get($alphabet, g));
+}
+.h {
+  background-color: map-get($alphabet, h);
+  color: set-text-color(map-get($alphabet, h));
+}
+.i {
+  background-color: map-get($alphabet, i);
+  color: set-text-color(map-get($alphabet, i));
+}
+.j {
+  background-color: map-get($alphabet, j);
+  color: set-text-color(map-get($alphabet, j));
+}
+.k {
+  background-color: map-get($alphabet, k);
+  color: set-text-color(map-get($alphabet, k));
+}
+.l {
+  background-color: map-get($alphabet, l);
+  color: set-text-color(map-get($alphabet, l));
+}
+.m {
+  background-color: map-get($alphabet, m);
+  color: set-text-color(map-get($alphabet, m));
+}
+.n {
+  background-color: map-get($alphabet, n);
+  color: set-text-color(map-get($alphabet, n));
+}
+.o {
+  background-color: map-get($alphabet, o);
+  color: set-text-color(map-get($alphabet, o));
+}
+.p {
+  background-color: map-get($alphabet, p);
+  color: set-text-color(map-get($alphabet, p));
+}
+.q {
+  background-color: map-get($alphabet, q);
+  color: set-text-color(map-get($alphabet, q));
+}
+.r {
+  background-color: map-get($alphabet, r);
+  color: set-text-color(map-get($alphabet, r));
+}
+.s {
+  background-color: map-get($alphabet, s);
+  color: set-text-color(map-get($alphabet, s));
+}
+.t {
+  background-color: map-get($alphabet, t);
+  color: set-text-color(map-get($alphabet, t));
+}
+.u {
+  background-color: map-get($alphabet, u);
+  color: set-text-color(map-get($alphabet, u));
+}
+.v {
+  background-color: map-get($alphabet, v);
+  color: set-text-color(map-get($alphabet, v));
+}
+.w {
+  background-color: map-get($alphabet, w);
+  color: set-text-color(map-get($alphabet, w));
+}
+.x {
+  background-color: map-get($alphabet, x);
+  color: set-text-color(map-get($alphabet, x));
+}
+.y {
+  background-color: map-get($alphabet, y);
+  color: set-text-color(map-get($alphabet, y));
+}
+.z {
+  background-color: map-get($alphabet, z);
+  color: set-text-color(map-get($alphabet, z));
+}

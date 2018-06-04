@@ -1,63 +1,55 @@
-import { NgModule, ErrorHandler } from '@angular/core';
+/*Ionic & Angular Dependencies*/
 import { BrowserModule } from '@angular/platform-browser';
-import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
-import { MyApp } from './app.component';
-import { IonicStorageModule } from '@ionic/storage';
-
-import {NotesPage} from '../pages/Notes/Notes';
-import {NamesPage} from '../pages/Names/Names';
-import {TabsPage} from '../pages/tabs/tabs';
-import {AddNotePage} from '../pages/AddNote/AddNote';
-import {AddNamePage} from '../pages/AddName/AddName';
-
-import {AutoResize} from '../directives/AutoResize';
-import {AppStorage} from '../providers/AppStorage'
-
-import { StatusBar } from '@ionic-native/status-bar';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import {ImageViewPage} from "../pages/ImageView/ImageView";
-import {NameViewPage} from "../pages/NameView/NameView";
+import { StatusBar } from '@ionic-native/status-bar';
+import { AutosizeModule } from 'ngx-autosize';
+
+/*Pages*/
+import { MyApp } from './app.component';
+import { HomePage } from '../pages/home/home';
+import {NamesPage} from "../pages/names/names";
+import {NotesPage} from "../pages/notes/notes";
+import {AddNamePage} from "../pages/add-name/add-name";
+
+/*Pipes*/
+import {PipesModule} from "../pipes/pipes.module";
+
+/*Directives*/
+import {NotificationDirective} from "../directives/notification/notification";
+import {LocalStorageDirective} from "../directives/local-storage/local-storage";
+
 
 @NgModule({
   declarations: [
-    AutoResize,
     MyApp,
-    NotesPage,
-    AddNotePage,
+    HomePage,
     NamesPage,
-    AddNamePage,
-    TabsPage,
-    ImageViewPage,
-    NameViewPage
+    NotesPage,
+    AddNamePage
   ],
   imports: [
     BrowserModule,
-    IonicStorageModule.forRoot(),
+    PipesModule,
+    AutosizeModule,
     IonicModule.forRoot(MyApp, {
-      tabsPlacement: 'top',
-      tabsHideOnSubPages: true,
-      platforms: {
-        ios: {
-          tabsPlacement: 'bottom',
-        }
-      }
+      tabsHideOnSubPages: 'true'
     })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    NotesPage,
-    AddNotePage,
+    HomePage,
     NamesPage,
-    AddNamePage,
-    TabsPage,
-    ImageViewPage,
-    NameViewPage
+    NotesPage,
+    AddNamePage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    AppStorage,
+    NotificationDirective,
+    LocalStorageDirective,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

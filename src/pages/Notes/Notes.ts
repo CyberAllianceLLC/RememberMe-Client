@@ -1,39 +1,32 @@
-import {Component} from '@angular/core';
-import {NavController, reorderArray} from 'ionic-angular';
-import _ from "lodash";
-
-import {AddNotePage} from '../AddNote/AddNote';
-import {AppStorage} from "../../providers/AppStorage";
+import {Component, ViewChild} from '@angular/core';
+import _ from 'lodash';
+import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
 
 @Component({
   selector: 'page-notes',
-  templateUrl: 'Notes.html'
+  templateUrl: 'notes.html',
 })
 export class NotesPage {
 
-  notes = [];
-  edit = false;
+  @ViewChild('nav') nav;
+  notes: any[];
 
-  constructor(public nav: NavController, private storage: AppStorage) {}
-
-  ionViewWillEnter() {
-    this.storage.get('notes').then((result: any) => {
-      if(Array.isArray(result) && !_.isEqual(this.notes, result)) {
-        this.notes = result;
-      }
+  constructor(private localStorage: LocalStorageDirective) {
+    this.localStorage.get('Names').then((result: any) => {
+      this.notes = (_.isArray(result) ? result : []);
     });
   }
 
-  addNotesPage() {
-    this.nav.push(AddNotePage);
+  getFirstLetter(value) {
+    return _.toLower(_.head(value));
   }
 
-  editNotes(bool) {
-    this.edit = bool;
+  noteProfile(note) {
+    console.log(note.title);
   }
 
-  reorderNotes(indexes) {
-    this.notes = reorderArray(this.notes, indexes);
-    this.storage.set('notes', this.notes);
+  addNote() {
+    console.log('Add note');
   }
+
 }

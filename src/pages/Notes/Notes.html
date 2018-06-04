@@ -1,32 +1,21 @@
 <ion-header>
   <ion-navbar>
-    <button showWhen="ios" ion-button clear (click)="editNotes(!edit)">
-      Edit
-    </button>
-    <ion-title>
-      Notes
-    </ion-title>
+    <ion-title>Notes</ion-title>
     <ion-buttons end>
-      <button showWhen="android,windows" ion-button clear (click)="editNotes(!edit)">
-        Edit
-      </button>
-      <button showWhen="ios" ion-button clear (click)="addNotesPage()">
+      <button ion-button icon-only (click)="addNote()">
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-
 <ion-content>
-  <ion-fab showWhen="android, windows" bottom right>
-    <button ion-fab color="danger" (click)="addNotesPage()"><ion-icon name="add"></ion-icon></button>
-  </ion-fab>
   <ion-list>
-    <ion-item-group [reorder]="edit" (ionItemReorder)="reorderNotes($event)">
-      <button ion-item *ngFor="let note of notes" detail-push>
-        <h2 ion-text>{{note.title}}</h2>
-        <p ion-text>{{note.description}}</p>
-      </button>
-    </ion-item-group>
+    <button ion-item *ngFor="let note of notes" (click)="noteProfile(note)">
+      <ion-thumbnail item-start class="alphabet-content" [ngClass]="getFirstLetter(note.title)">
+        {{note.title | firstLetter}}
+      </ion-thumbnail>
+      <h2>{{note.title}}</h2>
+      <p>{{note.description}}</p>
+    </button>
   </ion-list>
 </ion-content>
