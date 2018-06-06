@@ -1,6 +1,8 @@
-import {Component, ViewChild} from '@angular/core';
-import _ from 'lodash';
+import {Component} from '@angular/core';
 import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
+import {NavController} from "ionic-angular";
+import _ from 'lodash';
+import {AddNotePage} from "../add-note/add-note";
 
 @Component({
   selector: 'page-notes',
@@ -8,11 +10,14 @@ import {LocalStorageDirective} from "../../directives/local-storage/local-storag
 })
 export class NotesPage {
 
-  @ViewChild('nav') nav;
   notes: any[];
 
-  constructor(private localStorage: LocalStorageDirective) {
-    this.localStorage.get('Names').then((result: any) => {
+  constructor(private navCtrl: NavController,
+              private localStorage: LocalStorageDirective) {
+  }
+
+  ionViewDidEnter() {
+    this.localStorage.get('Notes').then((result: any) => {
       this.notes = (_.isArray(result) ? result : []);
     });
   }
@@ -26,7 +31,7 @@ export class NotesPage {
   }
 
   addNote() {
-    console.log('Add note');
+    this.navCtrl.push(AddNotePage);
   }
 
 }

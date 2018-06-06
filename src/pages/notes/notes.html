@@ -11,7 +11,10 @@
 <ion-content>
   <ion-list>
     <button ion-item *ngFor="let note of notes" (click)="noteProfile(note)">
-      <ion-thumbnail item-start class="alphabet-content" [ngClass]="getFirstLetter(note.title)">
+      <ion-thumbnail *ngIf="note.picture" item-start>
+        <ion-img [src]="note.picture"></ion-img>
+      </ion-thumbnail>
+      <ion-thumbnail *ngIf="!note.picture" item-start class="alphabet-content" [ngClass]="getFirstLetter(note.title)">
         {{note.title | firstLetter}}
       </ion-thumbnail>
       <h2>{{note.title}}</h2>

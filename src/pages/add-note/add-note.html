@@ -1,8 +1,8 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Add Name</ion-title>
+    <ion-title>Add Note</ion-title>
     <ion-buttons end>
-      <button ion-button outline color="primary" [disabled]="!nameForm.valid" (click)="saveName()">
+      <button ion-button outline color="primary" [disabled]="!noteForm.valid" (click)="saveNote()">
         save
       </button>
     </ion-buttons>
@@ -11,13 +11,13 @@
 
 <ion-content>
   <div text-center>
-    <img class="profile-pic" width="150" [src]="getPicture()" (click)="setPicture()"/>
+    <img class="note-pic" width="150" [src]="getPicture()" (click)="setPicture()"/>
   </div>
-  <form [formGroup]="nameForm" novalidate>
+  <form [formGroup]="noteForm" novalidate>
     <ion-list>
       <ion-item>
-        <ion-label floating>Name:</ion-label>
-        <ion-input type="text" formControlName="name"></ion-input>
+        <ion-label floating>Title:</ion-label>
+        <ion-input type="text" formControlName="title"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating>Description:</ion-label>

@@ -12,10 +12,13 @@
 <ion-content>
   <ion-list>
     <button ion-item *ngFor="let name of names" (click)="nameProfile(name)">
-      <ion-thumbnail item-start class="alphabet-content" [ngClass]="getFirstLetter(name.first)">
-        {{name.first | firstLetter}}
+      <ion-thumbnail *ngIf="name.picture" item-start>
+        <ion-img [src]="name.picture"></ion-img>
       </ion-thumbnail>
-      <h2>{{name.first}} {{name.last}}</h2>
+      <ion-thumbnail *ngIf="!name.picture" item-start class="alphabet-content" [ngClass]="getFirstLetter(name.name)">
+        {{name.name | firstLetter}}
+      </ion-thumbnail>
+      <h2>{{name.name}}</h2>
       <p>{{name.description}}</p>
     </button>
   </ion-list>

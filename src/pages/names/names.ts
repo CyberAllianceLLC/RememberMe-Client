@@ -14,6 +14,9 @@ export class NamesPage {
 
   constructor(private navCtrl: NavController,
               private localStorage: LocalStorageDirective) {
+  }
+
+  ionViewDidEnter() {
     this.localStorage.get('Names').then((result: any) => {
       this.names = (_.isArray(result) ? result : []);
     });
@@ -28,7 +31,7 @@ export class NamesPage {
   }
 
   nameProfile(name) {
-    console.log(name.first);
+    console.log(name.name);
   }
 
 }

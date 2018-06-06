@@ -12,6 +12,7 @@ import { HomePage } from '../pages/home/home';
 import {NamesPage} from "../pages/names/names";
 import {NotesPage} from "../pages/notes/notes";
 import {AddNamePage} from "../pages/add-name/add-name";
+import {AddNotePage} from "../pages/add-note/add-note";
 
 /*Pipes*/
 import {PipesModule} from "../pipes/pipes.module";
@@ -27,7 +28,8 @@ import {LocalStorageDirective} from "../directives/local-storage/local-storage";
     HomePage,
     NamesPage,
     NotesPage,
-    AddNamePage
+    AddNamePage,
+    AddNotePage
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,8 @@ import {LocalStorageDirective} from "../directives/local-storage/local-storage";
     HomePage,
     NamesPage,
     NotesPage,
-    AddNamePage
+    AddNamePage,
+    AddNotePage
   ],
   providers: [
     StatusBar,

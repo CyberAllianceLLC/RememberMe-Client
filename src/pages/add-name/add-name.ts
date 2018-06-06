@@ -19,10 +19,17 @@ export class AddNamePage {
               private formBuilder: FormBuilder,
               private notificationService: NotificationDirective) {
     this.nameForm = this.formBuilder.group({
-      first: ['', [Validators.required]],
-      last: ['', [Validators.required]],
+      name: ['', [Validators.required]],
       description: ['']
     });
+  }
+
+  getPicture() {
+    return (this.picture !== '' ? this.picture : '../assets/imgs/profile_pic.png');
+  }
+
+  setPicture() {
+    console.log('setting picture...');
   }
 
   saveName() {
@@ -30,15 +37,14 @@ export class AddNamePage {
       let names = (_.isArray(result) ? result : []);
       names.push({
         picture: this.picture,
-        first: this.nameForm.value.first,
-        last: this.nameForm.value.last,
+        name: this.nameForm.value.name,
         description: this.nameForm.value.description
       });
       return this.localStorage.set('Names', names);
     }).then(() => {
       this.notificationService.sendNotification({
         type: 'success',
-        message: `${this.nameForm.value.first} ${this.nameForm.value.last} saved!`
+        message: `${this.nameForm.value.name} saved!`
       });
       this.navCtrl.pop();
     }).catch(() => {
