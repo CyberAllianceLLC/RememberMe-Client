@@ -41,7 +41,7 @@ export class NameProfilePage {
   deleteName() {
     const alert = this.alertCtrl.create({
       title: 'Delete Name',
-      subTitle: `Are you sure you want to delete ${this.name.name}?`,
+      subTitle: `Are you sure you want to delete this name?`,
       buttons: [
         {
           text: 'Cancel'

@@ -41,7 +41,7 @@ export class NoteProfilePage {
   deleteNote() {
     const alert = this.alertCtrl.create({
       title: 'Delete Note',
-      subTitle: `Are you sure you want to delete ${this.note.title}?`,
+      subTitle: `Are you sure you want to delete this note?`,
       buttons: [
         {
           text: 'Cancel'

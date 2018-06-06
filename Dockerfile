@@ -7,9 +7,8 @@ COPY ./ ./
 # Install
 RUN npm install
 
-# Expose ports 4200, 4210
-EXPOSE 4200
-EXPOSE 4210
+# Expose ports 8100, 35729 and 53703
+EXPOSE 8100 35729 53703
 
 # Finish
 CMD npm run ionic:serve
