@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LocalStorageDirective } from "../../directives/local-storage/local-storage";
 import _ from 'lodash';
+import shortid from 'shortid';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NotificationDirective} from "../../directives/notification/notification";
 
@@ -36,6 +37,7 @@ export class AddNamePage {
     this.localStorage.get('Names').then((result: any) => {
       let names = (_.isArray(result) ? result : []);
       names.push({
+        name_id: shortid.generate(),
         picture: this.picture,
         name: this.nameForm.value.name,
         description: this.nameForm.value.description

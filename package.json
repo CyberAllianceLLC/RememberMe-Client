@@ -1,5 +1,6 @@
 {
   "name": "RememberMe",
+  "description": "An Ionic project",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "http://ionicframework.com/",
@@ -30,12 +31,12 @@
     "lodash": "^4.17.10",
     "ngx-autosize": "^1.0.0",
     "rxjs": "5.5.11",
+    "shortid": "^2.2.8",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.9",
     "typescript": "~2.6.2"
-  },
-  "description": "An Ionic project"
+  }
 }

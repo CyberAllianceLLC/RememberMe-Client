@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
 import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
-import {NavController} from "ionic-angular";
+import { NavController } from "ionic-angular";
 import _ from 'lodash';
 import {AddNotePage} from "../add-note/add-note";
+import {NoteProfilePage} from "../note-profile/note-profile";
 
 @Component({
   selector: 'page-notes',
@@ -26,12 +27,14 @@ export class NotesPage {
     return _.toLower(_.head(value));
   }
 
-  noteProfile(note) {
-    console.log(note.title);
-  }
-
   addNote() {
     this.navCtrl.push(AddNotePage);
+  }
+
+  noteProfile(note) {
+    this.navCtrl.push(NoteProfilePage, {
+      note: note
+    });
   }
 
 }

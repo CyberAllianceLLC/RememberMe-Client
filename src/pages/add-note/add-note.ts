@@ -4,6 +4,7 @@ import {NotificationDirective} from "../../directives/notification/notification"
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
 import _ from 'lodash';
+import shortid from 'shortid';
 
 @Component({
   selector: 'page-add-note',
@@ -36,6 +37,7 @@ export class AddNotePage {
     this.localStorage.get('Notes').then((result: any) => {
       let notes = (_.isArray(result) ? result : []);
       notes.push({
+        note_id: shortid.generate(),
         picture: this.picture,
         title: this.noteForm.value.title,
         description: this.noteForm.value.description

@@ -25,6 +25,12 @@ export class MyApp {
     });
   }
 
+  ionViewWillUnload() {
+    if(this.notification) {
+      this.notification.unsubscribe();
+    }
+  }
+
   displayNotification(body: any) {
     console.log(body);
   }

@@ -3,6 +3,7 @@ import {NavController} from "ionic-angular";
 import _ from 'lodash';
 import {AddNamePage} from "../add-name/add-name";
 import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
+import {NameProfilePage} from "../name-profile/name-profile";
 
 @Component({
   selector: 'page-names',
@@ -31,7 +32,9 @@ export class NamesPage {
   }
 
   nameProfile(name) {
-    console.log(name.name);
+    this.navCtrl.push(NameProfilePage, {
+      name: name
+    });
   }
 
 }

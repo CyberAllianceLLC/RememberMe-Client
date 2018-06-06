@@ -6,6 +6,13 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { AutosizeModule } from 'ngx-autosize';
 
+/*Pipes*/
+import {PipesModule} from "../pipes/pipes.module";
+
+/*Directives*/
+import {NotificationDirective} from "../directives/notification/notification";
+import {LocalStorageDirective} from "../directives/local-storage/local-storage";
+
 /*Pages*/
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -13,13 +20,10 @@ import {NamesPage} from "../pages/names/names";
 import {NotesPage} from "../pages/notes/notes";
 import {AddNamePage} from "../pages/add-name/add-name";
 import {AddNotePage} from "../pages/add-note/add-note";
-
-/*Pipes*/
-import {PipesModule} from "../pipes/pipes.module";
-
-/*Directives*/
-import {NotificationDirective} from "../directives/notification/notification";
-import {LocalStorageDirective} from "../directives/local-storage/local-storage";
+import {NameProfilePage} from "../pages/name-profile/name-profile";
+import {NoteProfilePage} from "../pages/note-profile/note-profile";
+import {EditNameComponent} from "../components/edit-name/edit-name";
+import {EditNoteComponent} from "../components/edit-note/edit-note";
 
 
 @NgModule({
@@ -29,7 +33,11 @@ import {LocalStorageDirective} from "../directives/local-storage/local-storage";
     NamesPage,
     NotesPage,
     AddNamePage,
-    AddNotePage
+    AddNotePage,
+    NameProfilePage,
+    NoteProfilePage,
+    EditNameComponent,
+    EditNoteComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +54,11 @@ import {LocalStorageDirective} from "../directives/local-storage/local-storage";
     NamesPage,
     NotesPage,
     AddNamePage,
-    AddNotePage
+    AddNotePage,
+    NameProfilePage,
+    NoteProfilePage,
+    EditNameComponent,
+    EditNoteComponent
   ],
   providers: [
     StatusBar,

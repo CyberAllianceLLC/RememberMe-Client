@@ -14,3 +14,13 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+.picture {
+  width: 150px;
+  margin: 13px 0;
+  font-size: 126px;
+  text-align: center;
+  font-weight: 100;
+  border-radius: 15px;
+  //box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}

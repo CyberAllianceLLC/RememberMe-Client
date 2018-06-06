@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{name.name}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="deleteName()">
+        <ion-icon showWhen="ios" name="trash-outline"></ion-icon>
+        <ion-icon showWhen="android,windows" name="trash"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="editName()">
+        <ion-icon showWhen="ios" name="create-outline"></ion-icon>
+        <ion-icon showWhen="android,windows" name="create"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <div text-center>
+    <img *ngIf="name.picture" class="picture" [src]="name.picture" (click)="setPicture()"/>
+    <div *ngIf="!name.picture" [class]="'picture center-picture ' + getFirstLetter(name.name)">
+      {{name.name | firstLetter}}
+    </div>
+  </div>
+  <ion-list>
+    <ion-item>
+      <h2>Name:</h2>
+      <p>{{name.name}}</p>
+    </ion-item>
+    <ion-item>
+      <h2>Description:</h2>
+      <p class="description">{{name.description}}</p>
+    </ion-item>
+  </ion-list>
+</ion-content>
