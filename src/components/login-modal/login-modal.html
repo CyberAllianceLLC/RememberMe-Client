@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Login
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">Cancel</span>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="loginForm">
+    <ion-list>
+      <!-- Email-->
+      <ion-item>
+        <ion-label color="primary" floating>Email</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+      <!-- Password -->
+      <ion-item>
+        <ion-label color="primary" floating>Password</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+      </ion-item>
+    </ion-list>
+    <!-- Login Submit -->
+    <button ion-button block [disabled]="!loginForm.valid" (click)="loginUser()">Login</button>
+    <!-- Forgot Password -->
+    <div text-center>
+      <button ion-button clear (click)="forgotPassword()">Forgot Password</button>
+    </div>
+  </form>
+</ion-content>

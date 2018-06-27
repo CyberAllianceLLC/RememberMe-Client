@@ -1,9 +1,7 @@
-import { Directive } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-@Directive({
-  selector: '[local-storage]' // Attribute selector
-})
-export class LocalStorageDirective {
+@Injectable()
+export class LocalStorageProvider {
 
   get(key: string) {
     return new Promise((resolve, reject) => {
@@ -36,3 +34,4 @@ export class LocalStorageDirective {
     });
   }
 }
+

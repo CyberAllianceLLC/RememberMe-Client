@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { LocalStorageDirective } from "../../directives/local-storage/local-storage";
 import _ from 'lodash';
 import shortid from 'shortid';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {NotificationDirective} from "../../directives/notification/notification";
+import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
+import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 
 @Component({
   selector: 'page-add-name',
@@ -16,9 +16,9 @@ export class AddNamePage {
   picture = '';
 
   constructor(public navCtrl: NavController,
-              private localStorage: LocalStorageDirective,
+              private localStorage: LocalStorageProvider,
               private formBuilder: FormBuilder,
-              private notificationService: NotificationDirective) {
+              private notifications: NotificationServiceProvider) {
     this.nameForm = this.formBuilder.group({
       name: ['', [Validators.required]],
       description: ['']
@@ -44,15 +44,13 @@ export class AddNamePage {
       });
       return this.localStorage.set('Names', names);
     }).then(() => {
-      this.notificationService.sendNotification({
-        type: 'success',
+      this.notifications.sendNotification({
         message: `${this.nameForm.value.name} saved!`
       });
       this.navCtrl.pop();
     }).catch(() => {
-      this.notificationService.sendNotification({
-        type: 'error',
-        message: 'Unable to save name.'
+      this.notifications.sendNotification({
+        message: 'Error: Unable to save name.'
       });
     });
   }

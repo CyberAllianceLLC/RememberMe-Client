@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
 import { NavController } from "ionic-angular";
 import _ from 'lodash';
 import {AddNotePage} from "../add-note/add-note";
 import {NoteProfilePage} from "../note-profile/note-profile";
+import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
 
 @Component({
   selector: 'page-notes',
@@ -14,7 +14,7 @@ export class NotesPage {
   notes: any[];
 
   constructor(private navCtrl: NavController,
-              private localStorage: LocalStorageDirective) {
+              private localStorage: LocalStorageProvider) {
   }
 
   ionViewDidEnter() {

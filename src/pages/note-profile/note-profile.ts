@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import {AlertController, ModalController, NavController, NavParams} from 'ionic-angular';
 import _ from 'lodash';
 import {EditNoteComponent} from "../../components/edit-note/edit-note";
-import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
-import {NotificationDirective} from "../../directives/notification/notification";
+import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
+import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 
 @Component({
   selector: 'page-note-profile',
@@ -17,8 +17,8 @@ export class NoteProfilePage {
               public navCtrl: NavController,
               private modalCtrl: ModalController,
               private alertCtrl: AlertController,
-              private localStorage: LocalStorageDirective,
-              private notificationService: NotificationDirective) {
+              private localStorage: LocalStorageProvider,
+              private notificatons: NotificationServiceProvider) {
     this.note = navParams.get('note');
   }
 
@@ -58,15 +58,13 @@ export class NoteProfilePage {
                 throw Error('Unable to get id from note');
               }
             }).then(() => {
-              this.notificationService.sendNotification({
-                type: 'success',
+              this.notificatons.sendNotification({
                 message: `Successfully deleted ${this.note.title}!`
               });
               this.navCtrl.pop();
             }).catch((error: any) => {
-              this.notificationService.sendNotification({
-                type: 'error',
-                message: 'Unable to delete note.'
+              this.notificatons.sendNotification({
+                message: 'Error: Unable to delete note.'
               });
             });
           }

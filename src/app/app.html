@@ -1,1 +1,22 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Main Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <button ion-item *ngIf="!loggedIn" (click)="loginUser()">
+        Login
+      </button>
+      <button ion-item *ngIf="!loggedIn" (click)="createAccount()">
+        Create Account
+      </button>
+      <button ion-item *ngIf="loggedIn" (click)="logoutUser()">
+        Logout
+      </button>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-nav #content [root]="rootPage"></ion-nav>

@@ -9,9 +9,11 @@ import { AutosizeModule } from 'ngx-autosize';
 /*Pipes*/
 import {PipesModule} from "../pipes/pipes.module";
 
-/*Directives*/
-import {NotificationDirective} from "../directives/notification/notification";
-import {LocalStorageDirective} from "../directives/local-storage/local-storage";
+/*Providers*/
+import {HttpServiceProvider} from '../providers/http-service/http-service';
+import {EndpointServiceProvider} from '../providers/endpoint-service/endpoint-service';
+import {LocalStorageProvider} from '../providers/local-storage/local-storage';
+import {NotificationServiceProvider} from '../providers/notification-service/notification-service';
 
 /*Pages*/
 import { MyApp } from './app.component';
@@ -22,8 +24,12 @@ import {AddNamePage} from "../pages/add-name/add-name";
 import {AddNotePage} from "../pages/add-note/add-note";
 import {NameProfilePage} from "../pages/name-profile/name-profile";
 import {NoteProfilePage} from "../pages/note-profile/note-profile";
+
+/*Components*/
 import {EditNameComponent} from "../components/edit-name/edit-name";
 import {EditNoteComponent} from "../components/edit-note/edit-note";
+import {LoginModalComponent} from "../components/login-modal/login-modal";
+import {CreateAccountModalComponent} from "../components/create-account-modal/create-account-modal";
 
 
 @NgModule({
@@ -37,7 +43,9 @@ import {EditNoteComponent} from "../components/edit-note/edit-note";
     NameProfilePage,
     NoteProfilePage,
     EditNameComponent,
-    EditNoteComponent
+    EditNoteComponent,
+    LoginModalComponent,
+    CreateAccountModalComponent
   ],
   imports: [
     BrowserModule,
@@ -58,14 +66,18 @@ import {EditNoteComponent} from "../components/edit-note/edit-note";
     NameProfilePage,
     NoteProfilePage,
     EditNameComponent,
-    EditNoteComponent
+    EditNoteComponent,
+    LoginModalComponent,
+    CreateAccountModalComponent
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    NotificationDirective,
-    LocalStorageDirective,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    HttpServiceProvider,
+    EndpointServiceProvider,
+    LocalStorageProvider,
+    NotificationServiceProvider
   ]
 })
 export class AppModule {}

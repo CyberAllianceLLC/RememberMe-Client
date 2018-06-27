@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import {NotificationDirective} from "../../directives/notification/notification";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
 import _ from 'lodash';
 import shortid from 'shortid';
+import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
+import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 
 @Component({
   selector: 'page-add-note',
@@ -16,9 +16,9 @@ export class AddNotePage {
   picture = '';
 
   constructor(public navCtrl: NavController,
-              private localStorage: LocalStorageDirective,
+              private localStorage: LocalStorageProvider,
               private formBuilder: FormBuilder,
-              private notificationService: NotificationDirective) {
+              private notifications: NotificationServiceProvider) {
     this.noteForm = this.formBuilder.group({
       title: ['', [Validators.required]],
       description: ['']
@@ -44,15 +44,13 @@ export class AddNotePage {
       });
       return this.localStorage.set('Notes', notes);
     }).then(() => {
-      this.notificationService.sendNotification({
-        type: 'success',
+      this.notifications.sendNotification({
         message: `${this.noteForm.value.title} saved!`
       });
       this.navCtrl.pop();
     }).catch(() => {
-      this.notificationService.sendNotification({
-        type: 'error',
-        message: 'Unable to save note.'
+      this.notifications.sendNotification({
+        message: 'Error: Unable to save note.'
       });
     });
   }

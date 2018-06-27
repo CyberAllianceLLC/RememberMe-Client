@@ -1,11 +1,9 @@
-import { Directive } from '@angular/core';
-import {Observable} from "rxjs/Observable";
+import {Injectable} from '@angular/core';
 import {Subject} from "rxjs/Subject";
+import {Observable} from "rxjs/Observable";
 
-@Directive({
-  selector: '[notification]'
-})
-export class NotificationDirective {
+@Injectable()
+export class NotificationServiceProvider {
 
   private notification = new Subject<any>();
 

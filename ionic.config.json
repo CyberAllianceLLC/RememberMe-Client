@@ -2,6 +2,12 @@
   "name": "RememberMe",
   "app_id": "",
   "type": "ionic-angular",
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "http://localhost:3000/api"
+    }
+  ],
   "integrations": {
     "cordova": {}
   }

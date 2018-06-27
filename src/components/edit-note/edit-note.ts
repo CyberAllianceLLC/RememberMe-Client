@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import {NavParams, ViewController} from "ionic-angular";
-import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
-import {NotificationDirective} from "../../directives/notification/notification";
 import _ from 'lodash';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
+import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 
 @Component({
   selector: 'edit-note',
@@ -18,8 +18,8 @@ export class EditNoteComponent {
   constructor(public params: NavParams,
               public viewCtrl: ViewController,
               private formBuilder: FormBuilder,
-              private localStorage: LocalStorageDirective,
-              private notificationService: NotificationDirective) {
+              private localStorage: LocalStorageProvider,
+              private notifications: NotificationServiceProvider) {
     this.note = params.get('note');
     this.picture = this.note.picture;
     this.noteForm = this.formBuilder.group({
@@ -48,17 +48,15 @@ export class EditNoteComponent {
         throw Error('Unable to get id from note');
       }
     }).then(() => {
-      this.notificationService.sendNotification({
-        type: 'success',
+      this.notifications.sendNotification({
         message: `${this.noteForm.value.title} saved!`
       });
       this.viewCtrl.dismiss({
         note: note
       });
     }).catch(() => {
-      this.notificationService.sendNotification({
-        type: 'error',
-        message: 'Unable to save note.'
+      this.notifications.sendNotification({
+        message: 'Error: Unable to save note.'
       });
     });
   }

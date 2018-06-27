@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import {AlertController, ModalController, NavController, NavParams} from 'ionic-angular';
 import _ from 'lodash';
 import {EditNameComponent} from "../../components/edit-name/edit-name";
-import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
-import {NotificationDirective} from "../../directives/notification/notification";
+import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
+import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 
 @Component({
   selector: 'page-name-profile',
@@ -17,8 +17,8 @@ export class NameProfilePage {
               public navParams: NavParams,
               private modalCtrl: ModalController,
               private alertCtrl: AlertController,
-              private localStorage: LocalStorageDirective,
-              private notificationService: NotificationDirective) {
+              private localStorage: LocalStorageProvider,
+              private notifications: NotificationServiceProvider) {
     this.name = navParams.get('name');
   }
 
@@ -58,15 +58,13 @@ export class NameProfilePage {
                 throw Error('Unable to get id from name');
               }
             }).then(() => {
-              this.notificationService.sendNotification({
-                type: 'success',
+              this.notifications.sendNotification({
                 message: `Successfully deleted ${this.name.name}!`
               });
               this.navCtrl.pop();
             }).catch((error: any) => {
-              this.notificationService.sendNotification({
-                type: 'error',
-                message: 'Unable to delete name.'
+              this.notifications.sendNotification({
+                message: 'Error: Unable to delete name.'
               });
             });
           }

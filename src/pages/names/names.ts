@@ -2,8 +2,8 @@ import {Component} from '@angular/core';
 import {NavController} from "ionic-angular";
 import _ from 'lodash';
 import {AddNamePage} from "../add-name/add-name";
-import {LocalStorageDirective} from "../../directives/local-storage/local-storage";
 import {NameProfilePage} from "../name-profile/name-profile";
+import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
 
 @Component({
   selector: 'page-names',
@@ -14,7 +14,7 @@ export class NamesPage {
   names: any[];
 
   constructor(private navCtrl: NavController,
-              private localStorage: LocalStorageDirective) {
+              private localStorage: LocalStorageProvider) {
   }
 
   ionViewDidEnter() {

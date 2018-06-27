@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Create Account
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">Cancel</span>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="createAccountForm">
+    <ion-list>
+      <!-- Email-->
+      <ion-item>
+        <ion-label color="primary" floating>Email</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+      <!-- Password -->
+      <ion-item>
+        <ion-label color="primary" floating>Password</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+      </ion-item>
+      <!-- Confirm Password -->
+      <ion-item>
+        <ion-label color="primary" floating>Confirm Password</ion-label>
+        <ion-input type="password" formControlName="confirmPassword"></ion-input>
+      </ion-item>
+    </ion-list>
+    <!-- Login Submit -->
+    <button ion-button block [disabled]="!createAccountForm.valid" (click)="createAccount()">Create</button>
+  </form>
+</ion-content>
