@@ -12,6 +12,7 @@ import {NotificationServiceProvider} from "../../providers/notification-service/
 export class LoginModalComponent {
 
   loginForm: FormGroup;
+  isLoading: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
               private viewCtrl: ViewController,
@@ -26,17 +27,20 @@ export class LoginModalComponent {
 
   loginUser() {
     // login user
+    this.isLoading = true;
     this.endpoints.loginUser(this.loginForm.value['email'], this.loginForm.value['password'])
     .then((data: any) => {
       // User Logged in
+      this.isLoading = false;
       this.notifications.sendNotification({
         message: 'Logged in successfully!'
       });
       this.dismiss(data);
     }).catch((error: any) => {
       // User login failed
+      this.isLoading = false;
       this.notifications.sendNotification({
-        message: 'Error: Unable to log in.'
+        message: `Error: ${error}`
       });
     });
   }
@@ -60,7 +64,20 @@ export class LoginModalComponent {
           text: 'Send',
           handler: data => {
             // send recovery email
-            this.sendRecoveryEmail(data.email);
+            this.isLoading = true;
+            this.sendRecoveryEmail(data.email).then(() => {
+              // recovery email sent
+              this.isLoading = false;
+              this.notifications.sendNotification({
+                message: `Successfully sent recovery email to: ${data.email}`
+              });
+            }).catch((error: any) => {
+              // unable to send recovery email
+              this.isLoading = false;
+              this.notifications.sendNotification({
+                message: `Error: ${error}`
+              });
+            });
           }
         }
       ]
@@ -68,23 +85,14 @@ export class LoginModalComponent {
     alert.present();
   }
 
-  sendRecoveryEmail(email: string) {
+  private sendRecoveryEmail(email: string): Promise<any> {
     // check if valid email address
     if (Email.isValid(email)) {
       // send recovery email to email address
-      this.endpoints.sendRecoveryEmail(email).then((data: any) => {
-        this.notifications.sendNotification({
-          message: `Successfully sent recovery email to: ${email}`
-        });
-      }).catch((error: any) => {
-        this.notifications.sendNotification({
-          message: 'Error: Unable to send recovery email.'
-        });
-      });
+      return this.endpoints.sendRecoveryEmail(email);
     } else {
-      this.notifications.sendNotification({
-        message: 'Error: Not a valid email address.'
-      });
+      // Email is not valid
+      return Promise.reject('Not a valid email address.');
     }
   }
 

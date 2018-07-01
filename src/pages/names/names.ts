@@ -1,9 +1,10 @@
 import {Component} from '@angular/core';
 import {NavController} from "ionic-angular";
 import _ from 'lodash';
-import {AddNamePage} from "../add-name/add-name";
-import {NameProfilePage} from "../name-profile/name-profile";
-import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
+import {AddContentPage} from "../add-content/add-content";
+import {ContentProfilePage} from "../content-profile/content-profile";
+import {EndpointServiceProvider} from "../../providers/endpoint-service/endpoint-service";
+import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 
 @Component({
   selector: 'page-names',
@@ -12,14 +13,36 @@ import {LocalStorageProvider} from "../../providers/local-storage/local-storage"
 export class NamesPage {
 
   names: any[];
+  isLoading: boolean = false;
 
   constructor(private navCtrl: NavController,
-              private localStorage: LocalStorageProvider) {
+              private endpoints: EndpointServiceProvider,
+              private notifications: NotificationServiceProvider) {
   }
 
   ionViewDidEnter() {
-    this.localStorage.get('Names').then((result: any) => {
-      this.names = (_.isArray(result) ? result : []);
+    this.isLoading = true;
+    this.getContent().then((data: any) => {
+      this.isLoading = false;
+      this.names = data;
+    }).catch((error: any) => {
+      this.isLoading = false;
+      this.notifications.sendNotification({
+        message: `Error: ${error}`
+      });
+    });
+  }
+
+  getContent() {
+    return this.endpoints.getContentByType('name');
+  }
+
+  refreshContent(refresher: any) {
+    this.getContent().then((data: any) => {
+      this.names = data;
+      refresher.complete();
+    }).catch((error: any) => {
+      refresher.complete();
     });
   }
 
@@ -28,12 +51,12 @@ export class NamesPage {
   }
 
   addName() {
-    this.navCtrl.push(AddNamePage);
+    this.navCtrl.push(AddContentPage, {type: 'name'});
   }
 
-  nameProfile(name) {
-    this.navCtrl.push(NameProfilePage, {
-      name: name
+  contentProfile(content: any) {
+    this.navCtrl.push(ContentProfilePage, {
+      content: content
     });
   }
 

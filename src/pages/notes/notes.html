@@ -7,15 +7,27 @@
     </ion-buttons>
     <ion-title>Notes</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="addNote()">
+      <button ion-button icon-only (click)="addContent()">
         <ion-icon name="add"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content>
+  <!-- Pull to refresh -->
+  <ion-refresher (ionRefresh)="refreshContent($event)">
+    <ion-refresher-content
+      pullingText="Pull to refresh"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <!-- Loading -->
+  <div *ngIf="isLoading" text-center padding-top>
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <!-- List of Notes -->
   <ion-list>
-    <button ion-item *ngFor="let note of notes" (click)="noteProfile(note)">
+    <button ion-item *ngFor="let note of notes" (click)="contentProfile(note)">
       <ion-thumbnail *ngIf="note.picture" item-start>
         <ion-img [src]="note.picture"></ion-img>
       </ion-thumbnail>

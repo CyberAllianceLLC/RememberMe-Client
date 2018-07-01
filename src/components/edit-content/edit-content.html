@@ -7,10 +7,10 @@
       </button>
     </ion-buttons>
     <ion-title>
-      Edit Name
+      Edit {{content.type | capitalize}}
     </ion-title>
     <ion-buttons end>
-      <button ion-button outline color="primary" [disabled]="!nameForm.valid" (click)="saveName()">
+      <button ion-button outline color="primary" [disabled]="!contentForm.valid" (click)="saveContent()">
         save
       </button>
     </ion-buttons>
@@ -19,13 +19,17 @@
 
 <ion-content>
   <div text-center>
-    <img class="picture" width="150" [src]="getPicture()" (click)="setPicture()"/>
+    <img *ngIf="content.picture" class="picture" [src]="content.picture" (click)="setPicture()"/>
+    <div *ngIf="!content.picture" [class]="'picture center-picture ' + getFirstLetter(content.title)"
+         (click)="setPicture()">
+      {{content.title | firstLetter}}
+    </div>
   </div>
-  <form [formGroup]="nameForm" novalidate>
+  <form [formGroup]="contentForm" novalidate>
     <ion-list>
       <ion-item>
-        <ion-label floating>Name:</ion-label>
-        <ion-input type="text" formControlName="name"></ion-input>
+        <ion-label floating>{{content.type | capitalize}}:</ion-label>
+        <ion-input type="text" formControlName="title"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating>Description:</ion-label>

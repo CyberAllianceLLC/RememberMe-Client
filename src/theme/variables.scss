@@ -44,7 +44,13 @@ $colors: (
 // App Combined Variables
 // --------------------------------------------------
 // Android, iOS, and Windows variables go here
+/* Side Menu */
 $menu-width: 204px;
+/* Spinners */
+$refresher-icon-color: map-get($colors, primary);
+$spinner-ios-crescent-color: map-get($colors, primary);
+$spinner-md-crescent-color: map-get($colors, primary);
+$spinner-wp-crescent-color: map-get($colors, primary);
 
 $alphabet: (
   a: rgb(0, 0, 180),

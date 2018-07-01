@@ -15,15 +15,27 @@
 </ion-header>
 
 <ion-content>
+  <!-- Pull to refresh -->
+  <ion-refresher (ionRefresh)="refreshContent($event)">
+    <ion-refresher-content
+      pullingText="Pull to refresh"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <!-- Loading -->
+  <div *ngIf="isLoading" text-center padding-top>
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <!-- List of Names -->
   <ion-list>
-    <button ion-item *ngFor="let name of names" (click)="nameProfile(name)">
+    <button ion-item *ngFor="let name of names" (click)="contentProfile(name)">
       <ion-thumbnail *ngIf="name.picture" item-start>
         <ion-img [src]="name.picture"></ion-img>
       </ion-thumbnail>
-      <ion-thumbnail *ngIf="!name.picture" item-start class="alphabet-content" [ngClass]="getFirstLetter(name.name)">
-        {{name.name | firstLetter}}
+      <ion-thumbnail *ngIf="!name.picture" item-start class="alphabet-content" [ngClass]="getFirstLetter(name.title)">
+        {{name.title | firstLetter}}
       </ion-thumbnail>
-      <h2>{{name.name}}</h2>
+      <h2>{{name.title}}</h2>
       <p>{{name.description}}</p>
     </button>
   </ion-list>

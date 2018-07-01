@@ -3,20 +3,21 @@ import {MenuController, ModalController, Platform} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {ToastController} from 'ionic-angular';
+import _ from 'lodash';
 
 import { HomePage } from '../pages/home/home';
 import {LoginModalComponent} from "../components/login-modal/login-modal";
 import {EndpointServiceProvider} from "../providers/endpoint-service/endpoint-service";
 import {NotificationServiceProvider} from "../providers/notification-service/notification-service";
 import {CreateAccountModalComponent} from "../components/create-account-modal/create-account-modal";
+import {LocalStorageProvider} from "../providers/local-storage/local-storage";
+
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   rootPage:any = HomePage;
   notification: any;
-  loggedInStatus: any;
-  loggedIn: boolean;
 
   constructor(platform: Platform,
               statusBar: StatusBar,
@@ -25,24 +26,28 @@ export class MyApp {
               private menuCtrl: MenuController,
               private modalCtrl: ModalController,
               private notifications: NotificationServiceProvider,
-              private endpoints: EndpointServiceProvider) {
+              public endpoints: EndpointServiceProvider,
+              private localStorage: LocalStorageProvider) {
     platform.ready().then(() => {
       // App is ready
       statusBar.styleDefault();
       splashScreen.hide();
       // Subscribe to notification service
       this.notification = this.notifications.getNotification().subscribe((body: any) => this.displayNotification(body));
-      // Check if user is logged in
-      this.loggedInStatus = this.endpoints.getLoginStatus().subscribe((status: boolean) => this.updateLoginStatus(status));
+      // Check if user is logged in and auth tokens are not expired
+      this.endpoints.checkAuthExpire().then(() => {
+        // user logged in
+        this.endpoints.setLoginStatus(true);
+      }).catch((error: any) => {
+        // user not logged in
+        this.endpoints.setLoginStatus(false);
+      });
     });
   }
 
   ionViewWillUnload() {
     if (this.notification) {
       this.notification.unsubscribe();
-    }
-    if (this.loggedInStatus) {
-      this.loggedInStatus.unsubscribe();
     }
   }
 
@@ -54,15 +59,20 @@ export class MyApp {
     }).present();
   }
 
-  updateLoginStatus(status: boolean) {
-    this.loggedIn = status;
-  }
-
   loginUser() {
     // Open login component
     let loginModal = this.modalCtrl.create(LoginModalComponent);
-    loginModal.onDidDismiss(() => {
-      // Modal dismissed
+    loginModal.onDidDismiss((data: any) => {
+      //check if user logged in
+      if ('user_id' in data) {
+        this.localStorage.get('Content').then((content: any) => {
+          // get only content that has not been added to user account
+          return this.endpoints.newContent(_.filter(content, ['user_id', '']));
+        }).then(() => {
+          // remove all content when user is logged in
+          return this.endpoints.removeAllLocalContent();
+        });
+      }
     });
     loginModal.present();
     this.menuCtrl.close();

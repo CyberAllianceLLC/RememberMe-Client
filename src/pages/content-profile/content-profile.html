@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{content.title}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="deleteContent()">
+        <ion-icon showWhen="ios" name="trash-outline"></ion-icon>
+        <ion-icon showWhen="android,windows" name="trash"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="editContent()">
+        <ion-icon showWhen="ios" name="create-outline"></ion-icon>
+        <ion-icon showWhen="android,windows" name="create"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content>
+  <!-- Show loading Icon -->
+  <div *ngIf="isLoading" text-center padding-top>
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+  <div *ngIf="!isLoading">
+    <div text-center>
+      <img *ngIf="content.picture" class="picture" [src]="content.picture"/>
+      <div *ngIf="!content.picture" [class]="'picture center-picture ' + getFirstLetter(content.title)">
+        {{content.title | firstLetter}}
+      </div>
+    </div>
+    <ion-list>
+      <ion-item>
+        <h2>{{content.type | capitalize}}:</h2>
+        <p class="wrap-content">{{content.title}}</p>
+      </ion-item>
+      <ion-item>
+        <h2>Description:</h2>
+        <p class="wrap-content">{{content.description}}</p>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

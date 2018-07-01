@@ -1,17 +1,18 @@
 import { NgModule } from '@angular/core';
-import { EditNameComponent } from './edit-name/edit-name';
-import { EditNoteComponent } from './edit-note/edit-note';
+import {EditContentComponent} from './edit-content/edit-content';
 import {LoginModalComponent} from './login-modal/login-modal';
 import {CreateAccountModalComponent} from './create-account-modal/create-account-modal';
 @NgModule({
-	declarations: [EditNameComponent,
-    EditNoteComponent,
+  declarations: [
+    EditContentComponent,
     LoginModalComponent,
-    CreateAccountModalComponent],
+    CreateAccountModalComponent
+  ],
 	imports: [],
-	exports: [EditNameComponent,
-    EditNoteComponent,
+  exports: [
+    EditContentComponent,
     LoginModalComponent,
-    CreateAccountModalComponent]
+    CreateAccountModalComponent
+  ]
 })
 export class ComponentsModule {}

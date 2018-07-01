@@ -6,13 +6,13 @@
   </ion-header>
   <ion-content>
     <ion-list>
-      <button ion-item *ngIf="!loggedIn" (click)="loginUser()">
+      <button ion-item *ngIf="!endpoints.getLoginStatus()" (click)="loginUser()">
         Login
       </button>
-      <button ion-item *ngIf="!loggedIn" (click)="createAccount()">
+      <button ion-item *ngIf="!endpoints.getLoginStatus()" (click)="createAccount()">
         Create Account
       </button>
-      <button ion-item *ngIf="loggedIn" (click)="logoutUser()">
+      <button ion-item *ngIf="endpoints.getLoginStatus()" (click)="logoutUser()">
         Logout
       </button>
     </ion-list>

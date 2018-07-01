@@ -1,8 +1,8 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Add Name</ion-title>
+    <ion-title>Add {{type | capitalize}}</ion-title>
     <ion-buttons end>
-      <button ion-button outline color="primary" [disabled]="!nameForm.valid" (click)="saveName()">
+      <button ion-button outline color="primary" [disabled]="!contentForm.valid" (click)="saveContent()">
         save
       </button>
     </ion-buttons>
@@ -10,14 +10,18 @@
 </ion-header>
 
 <ion-content>
+  <!-- Loading -->
+  <div *ngIf="isLoading" text-center padding-top>
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
   <div text-center>
     <img class="picture" width="150" [src]="getPicture()" (click)="setPicture()"/>
   </div>
-  <form [formGroup]="nameForm" novalidate>
+  <form [formGroup]="contentForm" novalidate>
     <ion-list>
       <ion-item>
-        <ion-label floating>Name:</ion-label>
-        <ion-input type="text" formControlName="name"></ion-input>
+        <ion-label floating>Title:</ion-label>
+        <ion-input type="text" formControlName="title"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating>Description:</ion-label>

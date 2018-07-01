@@ -1,23 +1,17 @@
 import {Injectable} from '@angular/core';
-import {Subject} from "rxjs/Subject";
 import {HttpServiceProvider} from "../http-service/http-service";
-import {Observable} from "rxjs/Observable";
 import jwt from 'jsonwebtoken';
+import _ from 'lodash';
+import shortid from 'shortid';
+import {LocalStorageProvider} from "../local-storage/local-storage";
 
 @Injectable()
 export class EndpointServiceProvider {
 
-  private userLoggedIn = new Subject<boolean>();
+  private loggedIn: boolean;
 
-  constructor(private http: HttpServiceProvider) {
-    // Check if user is logged in and auth tokens are not expired
-    this.checkAuthExpire().then(() => {
-      // user logged in
-      this.setLoginStatus(true);
-    }).catch((error: any) => {
-      // user not logged in
-      this.setLoginStatus(false);
-    });
+  constructor(private http: HttpServiceProvider,
+              private localStorage: LocalStorageProvider) {
   }
 
   /* User */
@@ -67,9 +61,13 @@ export class EndpointServiceProvider {
       }).then((data: any) => {
         // update user login status
         this.setLoginStatus(true);
-        resolve();
+        // get values from jwt refresh token
+        let decoded = jwt.decode(data.refreshToken, {complete: true});
+        resolve({
+          user_id: decoded.payload.user_id
+        });
       }).catch((error: any) => {
-        reject(error);
+        reject('Unable to login.');
       });
     });
   }
@@ -81,7 +79,7 @@ export class EndpointServiceProvider {
         this.setLoginStatus(false);
         resolve();
       }).catch((error: any) => {
-        reject(error);
+        reject('Unable to log out.');
       });
     });
   }
@@ -111,56 +109,193 @@ export class EndpointServiceProvider {
 
   /* Content */
 
-  //CHECK: POST *newContent (user_id) <content_type> <title> <description> <picture>
-  newContent(content_type: string, title: string, description: string = '', picture: string = '') {
-    return this.checkAuthExpire().then((authToken: string) => {
-      return this.http.post('/newContent', {
-        content_type: content_type,
-        title: title,
-        description: description,
-        picture: picture
-      }, authToken);
+  //CHECK: POST *newContent (user_id) [<type> <title> <description> <picture>]
+  newContent(content: any[] = []) {
+    return new Promise((resolve, reject) => {
+      // Check if there is any new content to add
+      if (content.length <= 0) resolve();
+      // check if user is logged in
+      if (this.loggedIn) {
+        // add all content to user
+        this.checkAuthExpire().then((authToken: string) => {
+          return this.http.post('/newContent', _.map(content, (curr) => {
+            return {
+              content_type: curr.type,
+              title: curr.title,
+              description: curr.description || '',
+              picture: curr.picture || ''
+            };
+          }), authToken);
+        }).then((data: any) => {
+          resolve();
+        }).catch((error: any) => {
+          reject('Unable to create new content.');
+        });
+      } else {
+        this.localStorage.get('Content').then((currentContent: any) => {
+          // Add new values to current content
+          let updatedContent = currentContent.concat(_.map(content, (curr) => {
+            return {
+              content_id: shortid.generate(),
+              user_id: '',
+              type: curr.type,
+              title: curr.title,
+              description: curr.description || '',
+              picture: curr.picture || ''
+            };
+          }));
+          // update local storage with content
+          this.localStorage.set('Content', updatedContent).then(() => {
+            resolve();
+          }).catch(() => {
+            // Unable to add content to local storage
+            reject('Unable to add content.');
+          });
+        }).catch((error: any) => {
+          // No content found add initial content
+          return this.localStorage.set('Content', _.map(content, (curr) => {
+            return {
+              content_id: shortid.generate(),
+              user_id: '',
+              type: curr.type,
+              title: curr.title,
+              description: curr.description || '',
+              picture: curr.picture || ''
+            };
+          })).then(() => {
+            resolve();
+          }).catch(() => {
+            reject('Unable to add content.')
+          });
+        });
+      }
     });
   }
 
   //CHECK: POST *getContent (user_id) <[content_id]>
   getContent(content_id: string[]) {
-    return this.checkAuthExpire().then((authToken: string) => {
-      return this.http.post('/getContent', {
-        content_id: content_id
-      }, authToken);
+    return new Promise((resolve, reject) => {
+      if (this.loggedIn) {
+        this.checkAuthExpire().then((authToken: string) => {
+          return this.http.post('/getContent', {
+            content_id: content_id
+          }, authToken);
+        }).then((data: any) => {
+          resolve(data);
+        }).catch((error: any) => {
+          reject('Unable to get content.');
+        });
+      } else {
+        this.localStorage.get('Content').then((content: any) => {
+          let result = _.intersectionBy(content, _.map(content_id, (curr) => {
+            return {
+              content_id: curr
+            }
+          }), 'content_id');
+          // return all content that match content_ids
+          resolve(result);
+        }).catch((error: any) => {
+          reject('Unable to get content.');
+        });
+      }
     });
   }
 
   //CHECK: POST *getContentByType (user_id) <content_type>
-  getContentByType(content_type: string) {
-    return this.checkAuthExpire().then((authToken: string) => {
-      return this.http.post('/getContentByType', {
-        content_type: content_type
-      }, authToken);
+  getContentByType(type: string) {
+    return new Promise((resolve, reject) => {
+      if (this.loggedIn) {
+        // get all user content
+        this.checkAuthExpire().then((authToken: string) => {
+          return this.http.post('/getContentByType', {
+            content_type: type
+          }, authToken);
+        }).then((data: any) => {
+          resolve(data);
+        }).catch((error: any) => {
+          reject(`Unable to get ${type}s.`);
+        });
+      } else {
+        this.localStorage.get('Content').then((data: any) => {
+          resolve(_.filter(data, ['type', type]));
+        }).catch((error: any) => {
+          reject(`Unable to get ${type}s.`);
+        });
+      }
     });
   }
 
   //CHECK: POST *updateContent (user_id) <content_id> <content_type> <title> <description> <picture>
-  updateContent(content_id: string, content_type: string, title: string, description: string = '', picture: string = '') {
-    return this.checkAuthExpire().then((authToken: string) => {
-      return this.http.post('/updateContent', {
-        content_id: content_id,
-        content_type: content_type,
-        title: title,
-        description: description,
-        picture: picture
-      }, authToken);
+  updateContent(content_id: string, type: string, title: string, description: string = '', picture: string = '') {
+    return new Promise((resolve, reject) => {
+      if (this.loggedIn) {
+        this.checkAuthExpire().then((authToken: string) => {
+          return this.http.post('/updateContent', {
+            content_id: content_id,
+            content_type: type,
+            title: title,
+            description: description,
+            picture: picture
+          }, authToken);
+        }).then(() => {
+          resolve(`Successfully updated ${type}.`);
+        }).catch((error: any) => {
+          reject('Unable to update content.')
+        });
+      } else {
+        this.localStorage.get('Content').then((data: any) => {
+          // remove all content that matches content_id
+          _.pullAllBy(data, [{content_id: content_id}], 'content_id');
+          data.push({
+            content_id: content_id,
+            type: type,
+            title: title,
+            description: description,
+            picture: picture
+          });
+          return this.localStorage.set('Content', data);
+        }).then(() => {
+          resolve();
+        }).catch((error: any) => {
+          reject('Unable to update content');
+        });
+      }
     });
   }
 
   //CHECK: POST *removeContent (user_id) <[content_id]>
   removeContent(content_id: string[]) {
-    return this.checkAuthExpire().then((authToken: string) => {
-      return this.http.post('/removeContent', {
-        content_id: content_id
-      }, authToken);
+    return new Promise((resolve, reject) => {
+      if (this.loggedIn) {
+        this.checkAuthExpire().then((authToken: string) => {
+          return this.http.post('/removeContent', {
+            content_id: content_id
+          }, authToken);
+        }).then((data: any) => {
+          resolve('Successfully deleted content.');
+        }).catch((error: any) => {
+          reject('Unable to remove content.');
+        });
+      } else {
+        this.localStorage.get('Content').then((content: any) => {
+          // remove from local storage
+          let result = _.differenceBy(content, _.map(content_id, (curr) => {
+            return {
+              content_id: curr
+            };
+          }), 'content_id');
+          return this.localStorage.set('Content', result);
+        }).then(() => {
+          resolve();
+        }).catch((error: any) => {
+          reject('Unable to remove content.');
+        });
+      }
     });
+  }
+
+  removeAllLocalContent() {
+    return this.localStorage.set('Content', []);
   }
 
   /* Auth */
@@ -190,9 +325,8 @@ export class EndpointServiceProvider {
     });
   }
 
-  //DONE: checkAuthExpire
+  //CHECK: checkAuthExpire
   checkAuthExpire() {
-    // Math.floor(Date.now()/1000)+10 >= authToken.exp
     return new Promise((resolve, reject) => {
       this.http.getAuth().then((auth: any) => {
         // check if auth token exists
@@ -214,9 +348,10 @@ export class EndpointServiceProvider {
             resolve(auth.authToken);
           }
         } else {
-          throw 'user is not logged in';
+          throw 'User is not logged in';
         }
       }).catch((error: any) => {
+        this.setLoginStatus(false);
         reject(error);
       });
     });
@@ -226,12 +361,12 @@ export class EndpointServiceProvider {
 
   //CHECK: setLoginStatus <status>
   setLoginStatus(status: boolean) {
-    this.userLoggedIn.next(status);
+    this.loggedIn = status;
   }
 
   //CHECK: getLoginStatus
-  getLoginStatus(): Observable<boolean> {
-    return this.userLoggedIn.asObservable();
+  getLoginStatus() {
+    return this.loggedIn;
   }
 
 }

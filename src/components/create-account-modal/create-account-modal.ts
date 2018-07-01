@@ -30,7 +30,8 @@ export class CreateAccountModalComponent {
     this.endpoints.newUser(this.createAccountForm.value['email'], this.createAccountForm.value['password'])
     .then((data: any) => {
       this.notifications.sendNotification({
-        message: `Created account. Please verify email: ${this.createAccountForm.value['email']}.`
+        message: `Verification email sent to ${this.createAccountForm.value['email']}.`,
+        duration: 4000
       });
       this.dismiss(data);
     }).catch(() => {

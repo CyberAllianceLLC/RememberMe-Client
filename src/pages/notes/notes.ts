@@ -1,9 +1,11 @@
 import {Component} from '@angular/core';
 import { NavController } from "ionic-angular";
 import _ from 'lodash';
-import {AddNotePage} from "../add-note/add-note";
-import {NoteProfilePage} from "../note-profile/note-profile";
 import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
+import {ContentProfilePage} from "../content-profile/content-profile";
+import {AddContentPage} from "../add-content/add-content";
+import {EndpointServiceProvider} from "../../providers/endpoint-service/endpoint-service";
+import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 
 @Component({
   selector: 'page-notes',
@@ -12,14 +14,36 @@ import {LocalStorageProvider} from "../../providers/local-storage/local-storage"
 export class NotesPage {
 
   notes: any[];
+  isLoading: boolean = false;
 
   constructor(private navCtrl: NavController,
-              private localStorage: LocalStorageProvider) {
+              private endpoints: EndpointServiceProvider,
+              private notifications: NotificationServiceProvider) {
   }
 
   ionViewDidEnter() {
-    this.localStorage.get('Notes').then((result: any) => {
-      this.notes = (_.isArray(result) ? result : []);
+    this.isLoading = true;
+    this.getContent().then((data: any) => {
+      this.isLoading = false;
+      this.notes = data;
+    }).catch((error: any) => {
+      this.isLoading = false;
+      this.notifications.sendNotification({
+        message: `Error: ${error}`
+      });
+    })
+  }
+
+  getContent() {
+    return this.endpoints.getContentByType('note');
+  }
+
+  refreshContent(refresher: any) {
+    this.getContent().then((data: any) => {
+      this.notes = data;
+      refresher.complete();
+    }).catch((error: any) => {
+      refresher.complete();
     });
   }
 
@@ -27,13 +51,13 @@ export class NotesPage {
     return _.toLower(_.head(value));
   }
 
-  addNote() {
-    this.navCtrl.push(AddNotePage);
+  addContent() {
+    this.navCtrl.push(AddContentPage, {type: 'note'});
   }
 
-  noteProfile(note) {
-    this.navCtrl.push(NoteProfilePage, {
-      note: note
+  contentProfile(content: any) {
+    this.navCtrl.push(ContentProfilePage, {
+      content: content
     });
   }
 
