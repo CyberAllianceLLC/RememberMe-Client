@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import { NavController } from "ionic-angular";
 import _ from 'lodash';
-import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
 import {ContentProfilePage} from "../content-profile/content-profile";
 import {AddContentPage} from "../add-content/add-content";
 import {EndpointServiceProvider} from "../../providers/endpoint-service/endpoint-service";

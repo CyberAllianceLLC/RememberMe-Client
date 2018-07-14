@@ -12,6 +12,12 @@
       <button ion-item *ngIf="!endpoints.getLoginStatus()" (click)="createAccount()">
         Create Account
       </button>
+      <button ion-item *ngIf="endpoints.getLoginStatus()" (click)="updateEmail()">
+        Update Email
+      </button>
+      <button ion-item *ngIf="endpoints.getLoginStatus()" (click)="updatePassword()">
+        Update Password
+      </button>
       <button ion-item *ngIf="endpoints.getLoginStatus()" (click)="logoutUser()">
         Logout
       </button>

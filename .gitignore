@@ -3,6 +3,7 @@
 
 # Custom Ignore
 package-lock.json
+ionic.config.json
 
 # Default Ignore Files
 *~

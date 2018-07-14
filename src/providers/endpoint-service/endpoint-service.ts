@@ -39,12 +39,14 @@ export class EndpointServiceProvider {
     });
   }
 
-  //CHECK: POST *newEmail (user_id) <email>
+  //DONE: POST *newEmail (user_id) <new_email>
   newEmail(email: string) {
     return this.checkAuthExpire().then((authToken: string) => {
       return this.http.post('/newEmail', {
-        email: email
+        new_email: email
       }, authToken);
+    }).catch((error: any) => {
+      throw 'Unable to send verification email.';
     });
   }
 
@@ -84,7 +86,7 @@ export class EndpointServiceProvider {
     });
   }
 
-  //DONE: POST *getUserInfo (user_id)
+  //TODO: POST *getUserInfo (user_id)
   getUserInfo() {
     return this.checkAuthExpire().then((authToken: string) => {
       return this.http.post('/getUserInfo', {}, authToken)
@@ -100,16 +102,31 @@ export class EndpointServiceProvider {
 
   //CHECK: POST *removeUser (user_id) <password>
   removeUser(password: string) {
-    return this.checkAuthExpire().then((authToken: string) => {
-      return this.http.post('/removeUser', {
-        password: password
-      }, authToken);
+    return new Promise((resolve, reject) => {
+      // check if the user is logged in
+      if (this.loggedIn) {
+        // remove user from server
+        this.checkAuthExpire().then((authToken: string) => {
+          return this.http.post('/removeUser', {
+            password: password
+          }, authToken).then((data: any) => {
+            // log user out
+            return this.logoutUser();
+          });
+        }).then((data: any) => {
+          resolve('Successfully removed user');
+        }).catch((error: any) => {
+          reject('Unable to remove user.');
+        });
+      } else {
+        reject('You are not logged in.')
+      }
     });
   }
 
   /* Content */
 
-  //CHECK: POST *newContent (user_id) [<type> <title> <description> <picture>]
+  //DONE: POST *newContent (user_id) [<type> <title> <description> <picture>]
   newContent(content: any[] = []) {
     return new Promise((resolve, reject) => {
       // Check if there is any new content to add
@@ -132,6 +149,7 @@ export class EndpointServiceProvider {
           reject('Unable to create new content.');
         });
       } else {
+        // get all content from local storage
         this.localStorage.get('Content').then((currentContent: any) => {
           // Add new values to current content
           let updatedContent = currentContent.concat(_.map(content, (curr) => {
@@ -172,7 +190,7 @@ export class EndpointServiceProvider {
     });
   }
 
-  //CHECK: POST *getContent (user_id) <[content_id]>
+  //DONE: POST *getContent (user_id) <[content_id]>
   getContent(content_id: string[]) {
     return new Promise((resolve, reject) => {
       if (this.loggedIn) {
@@ -201,7 +219,7 @@ export class EndpointServiceProvider {
     });
   }
 
-  //CHECK: POST *getContentByType (user_id) <content_type>
+  //DONE: POST *getContentByType (user_id) <content_type>
   getContentByType(type: string) {
     return new Promise((resolve, reject) => {
       if (this.loggedIn) {
@@ -263,7 +281,7 @@ export class EndpointServiceProvider {
     });
   }
 
-  //CHECK: POST *removeContent (user_id) <[content_id]>
+  //DONE: POST *removeContent (user_id) <[content_id]>
   removeContent(content_id: string[]) {
     return new Promise((resolve, reject) => {
       if (this.loggedIn) {
@@ -294,13 +312,14 @@ export class EndpointServiceProvider {
     });
   }
 
+  // DONE: removeAllLocalContent
   removeAllLocalContent() {
     return this.localStorage.set('Content', []);
   }
 
   /* Auth */
 
-  //CHECK: POST newAuthToken <refreshToken>
+  //DONE: POST newAuthToken <refreshToken>
   newAuthToken(refreshToken: string) {
     return this.http.post('/newAuthToken', {
       refreshToken: refreshToken
@@ -325,7 +344,7 @@ export class EndpointServiceProvider {
     });
   }
 
-  //CHECK: checkAuthExpire
+  //DONE: checkAuthExpire
   checkAuthExpire() {
     return new Promise((resolve, reject) => {
       this.http.getAuth().then((auth: any) => {
@@ -359,12 +378,12 @@ export class EndpointServiceProvider {
 
   /* Misc */
 
-  //CHECK: setLoginStatus <status>
+  //DONE: setLoginStatus <status>
   setLoginStatus(status: boolean) {
     this.loggedIn = status;
   }
 
-  //CHECK: getLoginStatus
+  //DONE: getLoginStatus
   getLoginStatus() {
     return this.loggedIn;
   }

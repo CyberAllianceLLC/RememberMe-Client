@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
 import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 import {EndpointServiceProvider} from "../../providers/endpoint-service/endpoint-service";
 
@@ -18,7 +17,6 @@ export class AddContentPage {
 
   constructor(public navCtrl: NavController,
               private navParams: NavParams,
-              private localStorage: LocalStorageProvider,
               private formBuilder: FormBuilder,
               private notifications: NotificationServiceProvider,
               private endpoints: EndpointServiceProvider) {
@@ -35,7 +33,7 @@ export class AddContentPage {
   }
 
   setPicture() {
-    console.log('setting picture...');
+    //TODO: get and set picture from camera
   }
 
   saveContent() {

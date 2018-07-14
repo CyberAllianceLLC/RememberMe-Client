@@ -65,7 +65,8 @@ export class LoginModalComponent {
           handler: data => {
             // send recovery email
             this.isLoading = true;
-            this.sendRecoveryEmail(data.email).then(() => {
+            this.sendRecoveryEmail(data.email)
+            .then(() => {
               // recovery email sent
               this.isLoading = false;
               this.notifications.sendNotification({

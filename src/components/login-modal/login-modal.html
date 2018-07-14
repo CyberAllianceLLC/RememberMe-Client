@@ -27,7 +27,7 @@
       </ion-item>
     </ion-list>
     <!-- Login Submit -->
-    <button ion-button block [disabled]="!loginForm.valid" (click)="loginUser()">Login</button>
+    <button ion-button block [disabled]="!loginForm.valid || isLoading" (click)="loginUser()">Login</button>
     <!-- Forgot Password -->
     <div text-center>
       <button ion-button clear (click)="forgotPassword()">Forgot Password</button>

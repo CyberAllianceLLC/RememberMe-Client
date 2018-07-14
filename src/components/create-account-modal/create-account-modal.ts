@@ -12,6 +12,7 @@ import {PasswordValidation} from "../../providers/validators/password-validation
 export class CreateAccountModalComponent {
 
   createAccountForm: FormGroup;
+  isLoading = false;
 
   constructor(private formBuilder: FormBuilder,
               private viewCtrl: ViewController,
@@ -27,14 +28,17 @@ export class CreateAccountModalComponent {
   }
 
   createAccount() {
+    this.isLoading = true;
     this.endpoints.newUser(this.createAccountForm.value['email'], this.createAccountForm.value['password'])
     .then((data: any) => {
+      this.isLoading = false;
       this.notifications.sendNotification({
         message: `Verification email sent to ${this.createAccountForm.value['email']}.`,
         duration: 4000
       });
       this.dismiss(data);
     }).catch(() => {
+      this.isLoading = false;
       this.notifications.sendNotification({
         message: 'Error: Unable to create account.'
       });

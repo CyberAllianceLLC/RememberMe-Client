@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import {NavParams, ViewController} from "ionic-angular";
-import _ from 'lodash';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {LocalStorageProvider} from "../../providers/local-storage/local-storage";
 import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 import {EndpointServiceProvider} from "../../providers/endpoint-service/endpoint-service";
 

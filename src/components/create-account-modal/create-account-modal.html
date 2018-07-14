@@ -32,6 +32,7 @@
       </ion-item>
     </ion-list>
     <!-- Login Submit -->
-    <button ion-button block [disabled]="!createAccountForm.valid" (click)="createAccount()">Create</button>
+    <button ion-button block [disabled]="!createAccountForm.valid || isLoading" (click)="createAccount()">Create
+    </button>
   </form>
 </ion-content>

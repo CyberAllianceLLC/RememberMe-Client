@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {MenuController, ModalController, Platform} from 'ionic-angular';
+import {AlertController, MenuController, ModalController, Platform} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {ToastController} from 'ionic-angular';
@@ -11,6 +11,7 @@ import {EndpointServiceProvider} from "../providers/endpoint-service/endpoint-se
 import {NotificationServiceProvider} from "../providers/notification-service/notification-service";
 import {CreateAccountModalComponent} from "../components/create-account-modal/create-account-modal";
 import {LocalStorageProvider} from "../providers/local-storage/local-storage";
+import {Email} from "../providers/validators/email";
 
 @Component({
   templateUrl: 'app.html'
@@ -18,6 +19,7 @@ import {LocalStorageProvider} from "../providers/local-storage/local-storage";
 export class MyApp {
   rootPage:any = HomePage;
   notification: any;
+  isLoading = false;
 
   constructor(platform: Platform,
               statusBar: StatusBar,
@@ -25,6 +27,7 @@ export class MyApp {
               private toastCtrl: ToastController,
               private menuCtrl: MenuController,
               private modalCtrl: ModalController,
+              private alertCtrl: AlertController,
               private notifications: NotificationServiceProvider,
               public endpoints: EndpointServiceProvider,
               private localStorage: LocalStorageProvider) {
@@ -82,11 +85,107 @@ export class MyApp {
     // Open create account component
     let createAccountModal = this.modalCtrl.create(CreateAccountModalComponent);
     createAccountModal.onDidDismiss((data: any) => {
-      // Modal dismissed
-      console.log(data);
+      // Modal dismissed. Do nothing
     });
     createAccountModal.present();
     this.menuCtrl.close();
+  }
+
+  updateEmail() {
+    // update user email
+    let alert = this.alertCtrl.create({
+      title: 'Update Email',
+      inputs: [
+        {
+          name: 'email',
+          placeholder: 'Enter new email'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Update',
+          handler: data => {
+            // send verification email to new email
+            this.isLoading = true;
+            this.verifyNewEmail(data.email)
+            .then(() => {
+              // verification email sent
+              this.isLoading = false;
+              this.notifications.sendNotification({
+                message: `Email verification sent to: ${data.email}`
+              });
+            }).catch((error: any) => {
+              // unable to send verification email
+              this.isLoading = false;
+              this.notifications.sendNotification({
+                message: `Error: ${error}`
+              });
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  // CHECK: updatePassword
+  updatePassword() {
+    // update user email
+    let alert = this.alertCtrl.create({
+      title: 'New Password',
+      inputs: [
+        {
+          name: 'password',
+          type: 'password',
+          placeholder: 'Enter old password'
+        },
+        {
+          name: 'newPassword',
+          type: 'password',
+          placeholder: 'Enter new password'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Update',
+          handler: data => {
+            // check if new password meets min length requirements
+            if (data.newPassword.length > 6) {
+              // update user password
+              this.isLoading = true;
+              this.endpoints.newPassword(data.password, data.newPassword)
+              .then(() => {
+                // password has been updated successfully
+                this.isLoading = false;
+                this.notifications.sendNotification({
+                  message: `Successfully updated password.`
+                });
+              }).catch((error: any) => {
+                // unable to send verification email
+                this.isLoading = false;
+                this.notifications.sendNotification({
+                  message: `Error: ${error}`
+                });
+              });
+            } else {
+              // new password is not long enough
+              this.notifications.sendNotification({
+                message: `Error: New password is not long enough.`
+              });
+            }
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   logoutUser() {
@@ -96,6 +195,17 @@ export class MyApp {
         message: 'Successfully logged out.'
       });
     });
+  }
+
+  private verifyNewEmail(email: string) {
+    // check if valid email address
+    if (Email.isValid(email)) {
+      // send recovery email to email address
+      return this.endpoints.newEmail(email);
+    } else {
+      // Email is not valid
+      return Promise.reject('Not a valid email address.');
+    }
   }
 }
 
