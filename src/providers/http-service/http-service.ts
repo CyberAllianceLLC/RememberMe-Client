@@ -81,6 +81,7 @@ export class HttpServiceProvider {
   //DONE: removeAuth
   removeAuth() {
     return new Promise((resolve, reject) => {
+      // remove auth on client
       this.storage.set('auth', {
         refreshToken: '',
         authToken: ''

@@ -24,7 +24,7 @@ export class EndpointServiceProvider {
     });
   }
 
-  //CHECK: POST *newPassword (user_id) <password> <new_password>
+  //DONE: POST *newPassword (user_id) <password> <new_password>
   newPassword(password: string, new_password: string) {
     // check if auth tokens are still valid
     return this.checkAuthExpire().then((authToken: any) => {
@@ -77,19 +77,28 @@ export class EndpointServiceProvider {
   //DONE: logoutUser
   logoutUser() {
     return new Promise((resolve, reject) => {
-      this.http.removeAuth().then(() => {
-        this.setLoginStatus(false);
-        resolve();
-      }).catch((error: any) => {
-        reject('Unable to log out.');
-      });
-    });
-  }
-
-  //TODO: POST *getUserInfo (user_id)
-  getUserInfo() {
-    return this.checkAuthExpire().then((authToken: string) => {
-      return this.http.post('/getUserInfo', {}, authToken)
+      if (this.loggedIn) {
+        this.checkAuthExpire().then((authToken: string) => {
+          // get auth information from json web token
+          let authInfo = jwt.decode(authToken, {json: true});
+          // remove token from server
+          return this.http.post('/removeToken', {
+            token_id: [authInfo.token_id]
+          }, authToken);
+        }).then((data: any) => {
+          // remove auth from local storage
+          this.http.removeAuth().then(() => {
+            this.setLoginStatus(false);
+            resolve();
+          }).catch((error: any) => {
+            reject('Unable to log out.');
+          });
+        }).catch((error: any) => {
+          reject('Unable to remove login session from server.');
+        });
+      } else {
+        reject('User is not logged in.');
+      }
     });
   }
 
@@ -243,7 +252,7 @@ export class EndpointServiceProvider {
     });
   }
 
-  //CHECK: POST *updateContent (user_id) <content_id> <content_type> <title> <description> <picture>
+  //DONE: POST *updateContent (user_id) <content_id> <content_type> <title> <description> <picture>
   updateContent(content_id: string, type: string, title: string, description: string = '', picture: string = '') {
     return new Promise((resolve, reject) => {
       if (this.loggedIn) {
@@ -255,7 +264,7 @@ export class EndpointServiceProvider {
             description: description,
             picture: picture
           }, authToken);
-        }).then(() => {
+        }).then((data: any) => {
           resolve(`Successfully updated ${type}.`);
         }).catch((error: any) => {
           reject('Unable to update content.')
@@ -330,18 +339,22 @@ export class EndpointServiceProvider {
 
   //CHECK: POST *getUserTokenInfo (user_id)
   getUserTokenInfo() {
-    return this.checkAuthExpire().then((authToken: string) => {
+    return new Promise((resolve, reject) => {
+      if (this.loggedIn) {
+        this.checkAuthExpire().then((authToken: any) => {
+          return this.http.post('/getUserTokenInfo', {}, authToken);
+        }).then((data: any) => {
+          resolve(data);
+        }).catch((error: any) => {
+          reject('Unable to get user token information.');
+        })
+      } else {
+        reject('User is not logged in.')
+      }
+    });
+    /*return this.checkAuthExpire().then((authToken: string) => {
       return this.http.post('/getUserTokenInfo', {}, authToken);
-    });
-  }
-
-  //CHECK: POST *removeToken (user_id) <[token_id]>
-  removeToken(token_id: string[]) {
-    return this.checkAuthExpire().then((authToken: string) => {
-      return this.http.post('/removeToken', {
-        token_id: token_id
-      }, authToken);
-    });
+    });*/
   }
 
   //DONE: checkAuthExpire

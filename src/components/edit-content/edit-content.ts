@@ -3,6 +3,7 @@ import {NavParams, ViewController} from "ionic-angular";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {NotificationServiceProvider} from "../../providers/notification-service/notification-service";
 import {EndpointServiceProvider} from "../../providers/endpoint-service/endpoint-service";
+import _ from 'lodash';
 
 @Component({
   selector: 'edit-content',
@@ -23,6 +24,10 @@ export class EditContentComponent {
       title: [this.content.title, [Validators.required, Validators.maxLength(100)]],
       description: [this.content.description, [Validators.maxLength(1000)]]
     });
+  }
+
+  getFirstLetter(value) {
+    return _.toLower(_.head(value));
   }
 
   dismiss() {

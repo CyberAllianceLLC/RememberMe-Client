@@ -132,7 +132,6 @@ export class MyApp {
     alert.present();
   }
 
-  // CHECK: updatePassword
   updatePassword() {
     // update user email
     let alert = this.alertCtrl.create({
@@ -193,6 +192,10 @@ export class MyApp {
     this.endpoints.logoutUser().then(() => {
       this.displayNotification({
         message: 'Successfully logged out.'
+      });
+    }).catch((error: string) => {
+      this.displayNotification({
+        message: `Error: ${error}`
       });
     });
   }

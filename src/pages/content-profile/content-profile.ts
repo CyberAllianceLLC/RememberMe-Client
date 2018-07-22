@@ -37,7 +37,7 @@ export class ContentProfilePage {
         this.isLoading = true;
         this.endpoints.getContent([this.navParams.get('content').content_id]).then((data: any) => {
           this.isLoading = false;
-          this.content = data;
+          this.content = data[0];
         }).catch((error: any) => {
           this.isLoading = false;
         });
