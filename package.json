@@ -1,9 +1,8 @@
 {
   "name": "RememberMe",
-  "description": "An Ionic project",
+  "description": "Write down names and notes to help you remember.",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "Philip Smith",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",

@@ -68,9 +68,10 @@ export class MyApp {
     loginModal.onDidDismiss((data: any) => {
       //check if user logged in
       if ('user_id' in data) {
-        this.localStorage.get('Content').then((content: any) => {
-          // get only content that has not been added to user account
-          return this.endpoints.newContent(_.filter(content, ['user_id', '']));
+        this.localStorage.get('Content')
+        .then((content: any) => {
+          // add all content in local database. Reverse to keep order.
+          return this.endpoints.newContent(_.reverse(content));
         }).then(() => {
           // remove all content when user is logged in
           return this.endpoints.removeAllLocalContent();
